@@ -17,7 +17,10 @@ How would you explain to a budding developer what the drawbacks of using factory
 
 ## Response 1
 
+The downside of using **factory functions** are how they waste **memory** by creating a new object, and as more methods are added to the functions, the more memory they waste.
 
+**Classes**, on the other hand, when any instances invoke methods, they invoke from the same **scope**.
+ 
 ---
 
 ## Prompt 2
@@ -26,7 +29,36 @@ Explain what factors you should consider when deciding to make a property/method
 
 ## Response 2
 
+A **key factor** to consider when making a property **private** is whether you want the data in that property to be changed by **external** code.
+Example:
 
+```js
+class Items {
+  list = [];
+
+  constructor(stuff) {
+    this.stuff = stuff; // Type of Item.
+  }
+  
+  add(thing) {
+    if (typeof thing === "string") {
+      return this.list.push(thing); // add item as long as it string.
+  }
+  }
+
+  many() {
+    console.log(`Yes I have ${this.stuff} I have ${this.list.length} of them.`); // asks how many stuff you have.
+  }
+}
+
+const cups = new Items("Cups")
+cups.add('Mug');
+cups.add('Glass');
+cups.add('Tea Cup')
+cups.list.push(undefined); // since list is not private I can add whatever I want.
+cups.list.push(false);
+cups.many(); // Yes I have Cups I have 5(suppose to be only 3) of them.
+```
 ---
 
 ## Prompt 3
@@ -35,6 +67,7 @@ Explain what factors you should consider when deciding to make a property/method
 
 ## Response 3
 
+A key factor to consider when making a property **static** is when you need the data to be the same for all **instances**. Imagine I made a function that gave a person stones to build with, then I need to round up any **leftover stones**. I could put each person's leftover stone in a static property to gather a **total** amount.
 ---
 
 ## Prompt 4
@@ -48,7 +81,7 @@ class Vault {
     this.#secrets.push(newSecret);
   }
   listSecrets() {
-    return this.#secrets;
+    return [this.#secrets]; // <== here was this.#secrets
   }
 }
 ```
@@ -56,3 +89,5 @@ class Vault {
 Identify what the mistake is, explain why it is a problem, and suggest a way to fix it.
 
 ## Response 4
+
+The mistake is in the **listSecrets()** method. The problem is that it is returning a private array, which will **expose** it, giving the code outside the function access to the array. In order to avoid exposing the array, you need to make a copy of the array by making it a **rest array**.
